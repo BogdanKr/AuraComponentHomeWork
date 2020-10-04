@@ -1,0 +1,24 @@
+<!--
+ - Created by Bogdan on 04.10.2020.
+ -->
+
+<aura:component description="countrySearchForm">
+  <aura:attribute name="searchKey" type="String"/>
+  <aura:attribute name="searchType" type="String"/>
+  <aura:registerEvent name="searchCountryEvt" type="c:searchCountry"/>
+
+  <form class="slds-form_stacked">
+    <lightning:input label="Search: "
+                     value="{!v.searchKey}"
+                     required="true"
+                     type="text"/>
+
+    <lightning:select name="searchSelect" label="Choose search type" value="{!v.searchType}">
+      <option value="name">Name</option>
+      <option value="currency">Currency</option>
+      <option value="capital">Capital</option>
+    </lightning:select>
+    <lightning:button variant="brand" label="Find" onclick="{! c.findCountries }"/>
+
+  </form>
+</aura:component>

@@ -1,0 +1,8 @@
+<!--
+ - Created by Bogdan on 04.10.2020.
+ -->
+
+<aura:event type="COMPONENT" description="searchCountry">
+  <aura:attribute name="searchKey" type="String"/>
+  <aura:attribute name="searchType" type="String"/>
+</aura:event>

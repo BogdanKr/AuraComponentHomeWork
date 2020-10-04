@@ -1,0 +1,34 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global"
+                controller="CountriesApiController">
+  <aura:attribute name="countries" type="Object[]"/>
+  <aura:attribute name="Columns" type="List"/>
+  <aura:attribute name="showError" type="Boolean"/>
+  <aura:attribute name="errorMessage" type="String"/>
+  <aura:handler name="searchCountryEvt" event="c:searchCountry" action="{!c.handleSearchCountry}"/>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+
+  <aura:if isTrue="{!v.showError}">
+    <!-- Show the message to ui -->
+    <div class="slds-notify slds-notify_toast slds-theme_error">
+      <span class="slds-assistive-text">error</span>
+      <div class="slds-notify__content">
+        <h5 class="slds-text-heading_small slds-align_absolute-center">Error Message </h5>
+        <br/>
+        <p class="slds-align_absolute-center">{!v.errorMessage}</p>
+      </div>
+    </div>
+  </aura:if>
+
+  <lightning:card iconName="standard:picklist_type"
+                  title="Country search form">
+
+    <c:countrySearchForm/>
+
+    <lightning:datatable data="{! v.countries }" columns="{! v.Columns }" hideCheckboxColumn="true"
+                         keyField="Id"/>
+
+  </lightning:card>
+
+
+</aura:component>

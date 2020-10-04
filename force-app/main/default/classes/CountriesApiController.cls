@@ -3,18 +3,26 @@
  */
 
 public with sharing class CountriesApiController {
-
+    @AuraEnabled
     public static List<Country> getCountriesBySearchType(String searchKey, String searchType) {
         Http http = new Http();
         HttpRequest request = new HttpRequest();
         request.setEndpoint(getEndpointBySearchType(searchType) + searchKey);
         request.setMethod('GET');
         HttpResponse response = http.send(request);
-        List<Country> countries = (List<Country>) JSON.deserialize(response.getBody(), List<Country>.class);
-        System.debug(countries);
-
-        return countries;
-
+        try {
+            List<Country> countries = (List<Country>) JSON.deserialize(response.getBody(), List<Country>.class);
+            for (Country c : countries) {
+                c.currencyCode = '';
+                for (CountryCurrency cc : c.currencies) {
+                    c.currencyCode += ' ' + cc.code ;
+                }
+            }
+            System.debug(countries);
+            return countries;
+        } catch (Exception e) {
+            throw new AuraHandledException('Wrong input ' + e.getMessage());
+        }
     }
 
     private static String getEndpointBySearchType(String searchType) {
@@ -33,14 +41,23 @@ public with sharing class CountriesApiController {
     }
 
     public class Country {
-        public String name;
-        public String capital;
-        public CountryCurrency[] currencies;
-        public String subregion;
-        public String flag;
+        @AuraEnabled
+        public String name { get; set; }
+        @AuraEnabled
+        public String capital { get; set; }
+        @AuraEnabled
+        public Integer population { get; set; }
+        @AuraEnabled
+        public String currencyCode;
+        public CountryCurrency[] currencies { get; set; }
+        @AuraEnabled
+        public String subregion { get; set; }
+        @AuraEnabled
+        public String flag { get; set; }
+
     }
 
-    public  class CountryCurrency {
+    public class CountryCurrency {
         public String code;
         public String name;
         public String symbol;
