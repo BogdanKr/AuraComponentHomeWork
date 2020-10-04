@@ -3,11 +3,14 @@
  */
 
 public with sharing class CountriesApiController {
+    static CountriesApiEndpoint__mdt metaEndpoint =
+    [SELECT Endpoint__c FROM CountriesApiEndpoint__mdt WHERE Label = 'SearchByCountriesAPI'];
+
     @AuraEnabled
     public static List<Country> getCountriesBySearchType(String searchKey, String searchType) {
         Http http = new Http();
         HttpRequest request = new HttpRequest();
-        request.setEndpoint(getEndpointBySearchType(searchType) + searchKey);
+        request.setEndpoint(metaEndpoint.Endpoint__c + searchType + '/' + searchKey);
         request.setMethod('GET');
         HttpResponse response = http.send(request);
         try {
@@ -23,21 +26,6 @@ public with sharing class CountriesApiController {
         } catch (Exception e) {
             throw new AuraHandledException('Wrong input ' + e.getMessage());
         }
-    }
-
-    private static String getEndpointBySearchType(String searchType) {
-        switch on searchType {
-            when 'capital' {
-                return 'https://restcountries.eu/rest/v2/capital/';
-            }
-            when 'name' {
-                return 'https://restcountries.eu/rest/v2/name/';
-            }
-            when 'currency' {
-                return 'https://restcountries.eu/rest/v2/currency/';
-            }
-        }
-        return null;
     }
 
     public class Country {
