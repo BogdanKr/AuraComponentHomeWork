@@ -16,8 +16,9 @@
                     targetRecord="{!v.account}"
                     recordUpdated="{!c.doInit}"
                     layoutType="FULL"/>
-
+  
   <lightning:card iconName="standard:contact_list" title="{! 'Contact list for ' + v.account.fields.Name.value}">
+
     <div class="slds-p-left_medium slds-p-right_medium">
 
       <aura:if isTrue="{!v.contacts.length > 0}">
