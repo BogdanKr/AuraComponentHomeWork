@@ -1,0 +1,40 @@
+<!--
+ - Created by Bogdan on 04.10.2020.
+ -->
+
+<aura:component
+    implements="flexipage:availableForRecordHome,force:lightningQuickAction,force:hasRecordId"
+    access="global"
+    controller="MyAccountController">
+  <aura:attribute name="recordId" type="Id"/>
+  <aura:attribute name="contacts" type="Contact[]"/>
+  <aura:attribute name="account" type="Account"/>
+  <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+
+  <force:recordData aura:id="accountService"
+                    recordId="{!v.recordId}"
+                    targetRecord="{!v.account}"
+                    recordUpdated="{!c.doInit}"
+                    layoutType="FULL"/>
+
+  <lightning:card iconName="standard:contact_list" title="{! 'Contact list for ' + v.account.fields.Name.value}">
+    <div class="slds-p-left_medium slds-p-right_medium">
+
+      <aura:if isTrue="{!v.contacts.length > 0}">
+        <aura:iteration items="{!v.contacts}" var="contact">
+
+            <c:accountContact contact="{!contact}"/>
+          <br/>
+        </aura:iteration>
+
+        <aura:set attribute="else">
+          <li>
+            <h3 class="slds-text-small slds-text-color_error">No contacts found</h3>
+          </li>
+        </aura:set>
+      </aura:if>
+    </div>
+    <lightning:spinner aura:id="spinner" variant="brand" size="large"/>
+
+  </lightning:card>
+</aura:component>
